@@ -32,6 +32,6 @@ $resources[1]->fromArray(array(
     'menutitle' => 'Page Not Found Log Report',
     'hidemenu' => '1',
 ),'',true,true);
-$resources[1]->setContent(file_get_contents($sources['build'] . 'data/resources/pagenotfoundlogreport.content.html'));
+$resources[1]->setContent(file_get_contents($sources['build'] . 'data/resources/PageNotFoundLogReport.content.html'));
 
 return $resources;
