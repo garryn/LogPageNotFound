@@ -185,13 +185,18 @@ if ($hasCore) {
         ));
 }
 
-    if ($hasAssets) {
-        $vehicle->resolve('file',array(
-            'source' => $sources['source_assets'],
-            'target' => "return MODX_ASSETS_PATH . 'components/';",
-        ));
-    }
+if ($hasAssets) {
+    $vehicle->resolve('file',array(
+        'source' => $sources['source_assets'],
+        'target' => "return MODX_ASSETS_PATH . 'components/';",
+    ));
+}
 
+/* add table resolver */
+$modx->log(modX::LOG_LEVEL_INFO,'Adding in Table Resolver.');
+$vehicle->resolve('php',array(
+    'source' => $sources['resolvers'] . 'resolve.tables.php',
+));
 
 /* Put the category vehicle (with all the stuff we added to the
  * category) into the package 
