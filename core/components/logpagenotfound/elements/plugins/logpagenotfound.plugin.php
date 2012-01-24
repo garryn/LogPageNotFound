@@ -21,6 +21,8 @@
  * @subpackage build
  */
 
+$basePath = $modx->getOption('logpagenotfound.core_path', null, $modx->getOption('core_path').'components/logpagenotfound/');
+$modx->addPackage('logpagenotfound',$basePath . 'model/');
 
 if (!function_exists("get_host")) {
     function get_host($ip)
@@ -69,7 +71,7 @@ $data['page'] = $_SERVER['REQUEST_URI'];
 $t = gettimeofday();
 $data['time'] = date('d/m/y H:i:s:') . substr($t['usec'], 0, 3); // H:i:s:u
 $data['ip'] = $_SERVER['REMOTE_ADDR'];
-$data['userAgent'] = isset($_SERVER['HTTP_USER_AGENT'])
+$data['useragent'] = isset($_SERVER['HTTP_USER_AGENT'])
         ? $_SERVER['HTTP_USER_AGENT']
         : '<unknown user agent>';
 
@@ -77,9 +79,15 @@ $data['host'] = get_host($data['ip']);
 $data['referer'] = empty($_SERVER['HTTP_REFERER']) ? '(empty)' : $_SERVER['HTTP_REFERER'];
 $msg = implode('`', $data);
 
-$maxLines  = $modx->getOption('log_max_lines',$scriptProperties, 300);
-$file = MODX_CORE_PATH . 'logs/pagenotfound.log';
-logLine($msg . "\n", $maxLines, $file);
+/* file logging
+@todo make file and/or db logging options
+ */
+//$maxLines  = $modx->getOption('log_max_lines',$scriptProperties, 300);
+//$file = MODX_CORE_PATH . 'logs/pagenotfound.log';
+//logLine($msg . "\n", $maxLines, $file);
+$data['time'] = time();
+$logItem = $modx->newObject('pageNotFound', $data);
+$logItem->save();
 
 ignore_user_abort($oldSetting);
 
