@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model package="logpagenotfound" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="logpagenotfound">
+
+    <!-- log each 404, as per BobRay's original file log -->
     <object class="pageNotFound" table="logpagenotfound_items" extends="xPDOSimpleObject">
         <field key="time" dbtype="datetime" phptype="datetime" />
         <field key="ip" dbtype="varchar" precision="40" phptype="string" null="false" default="" index="index" />
@@ -8,4 +10,18 @@
         <field key="useragent" dbtype="text" phptype="string" null="false" default="" />
         <field key="referer" dbtype="text" phptype="string" null="false" default="" />
     </object>
+
+    <!-- log of resolved 404s and how they were handled -->
+    <object class="pageNotFoundResolved" table="logpagenotfound_resolved" extends="xPDOObject">
+        <field key="page" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="pk"/>
+        <field key="resolution_handler" dbtype="varchar" precision="255" null="false" default=""/>
+        <field key="resolution_msg" dbtype="varchar" precision="255" null="false" default=""/>
+        <field key="time" dbtype="datetime" phptype="datetime" />
+        <field key="user" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" />
+
+        <index alias="page" name="page" primary="true" unique="true" type="BTREE">
+            <column key="page" length="" collation="A" null="false" />
+        </index>
+    </object>
+
 </model>

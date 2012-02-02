@@ -2,8 +2,6 @@
 /**
  * LogPageNotFound
  *
- * 
- *
  * LogPageNotFound is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any
@@ -26,12 +24,20 @@
  * @subpackage lexicon
  */
 
-/* logpagenotfound example strings -
- * These would be used for messages displayed by your component
- * (e.g. error messages, prompts, etc.).
- */
+// general strings for MODX manager
 $_lang['logpagenotfound'] = 'LogPageNotFound';
 $_lang['logpagenotfound.menu_desc'] = 'LogPageNotFound is a plugin for MODX Revolution that logs page-not-found requests';
 
+// PageNotFound Manager Page - tabs
+$_lang['logpagenotfound.items_by_count'] = 'Pages by Count';
+$_lang['logpagenotfound.items_by_count_desc'] = 'A list of Pages Not Found which have not been logged as resolved. They are listed along with the running count of Not Found requests to the page.';
 
+// PageNotFound Manager Page - column headers
+$_lang['logpagenotfound.count'] = 'Count';
+$_lang['logpagenotfound.page'] = 'Page';
 
+// PageNotFound Manager Page - row context menu
+$_lang['logpagenotfound.page_resolve'] = 'Log resolution of <em>Not Found</em> status for this page.';
+
+// PageNotFound Manager Page - field names
+$_lang['logpagenotfound.fieldname.notes'] = 'Notes:';

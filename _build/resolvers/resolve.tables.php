@@ -13,13 +13,15 @@ if ($object->xpdo) {
     $manager = $modx->getManager();
 
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
+        case xPDOTransport::ACTION_UPGRADE:
         case xPDOTransport::ACTION_INSTALL:
             $manager->createObjectContainer('pageNotFound');
-            $modx->log(xPDO::LOG_LEVEL_INFO,'LogPageNotFound table created');
+            $modx->log(xPDO::LOG_LEVEL_INFO,'pageNotFound table created');
+
+            $manager->createObjectContainer('pageNotFoundResolved');
+            $modx->log(xPDO::LOG_LEVEL_INFO,'pageNotFoundResolved table created');
             break;
 
-        case xPDOTransport::ACTION_UPGRADE:
-            break;
     }
 }
 return true;

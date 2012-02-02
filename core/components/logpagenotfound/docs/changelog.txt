@@ -1,5 +1,9 @@
 Changelog for LogPageNotFound
 
+LogPageNotFound 1.0.4
+---------------------
+Add ability to log to database table
+
 LogPageNotFound 1.0.1
 ---------------------
 Minor bug fixes

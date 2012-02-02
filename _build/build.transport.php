@@ -31,8 +31,8 @@
 /* Set package info be sure to set all of these */
 define('PKG_NAME','LogPageNotFound');
 define('PKG_NAME_LOWER','logpagenotfound');
-define('PKG_VERSION','1.0.3');
-define('PKG_RELEASE','dev');
+define('PKG_VERSION','1.0.4');
+define('PKG_RELEASE','dev5');
 define('PKG_CATEGORY','LogPageNotFound');
 
 /* Set package options - you can turn these on one-by-one
@@ -233,6 +233,33 @@ foreach ($resources as $resource) {
     }
     unset($resources,$resource,$attributes);
 }
+
+/* load menu */
+$menu = include $sources['data'].'transport.menu.php';
+if (empty($menu)) {
+    $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in menu.');
+} else {
+    $vehicle= $builder->createVehicle($menu,array (
+        xPDOTransport::PRESERVE_KEYS => true,
+        xPDOTransport::UPDATE_OBJECT => true,
+        xPDOTransport::UNIQUE_KEY => 'text',
+        xPDOTransport::RELATED_OBJECTS => true,
+        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+            'Action' => array (
+                xPDOTransport::PRESERVE_KEYS => false,
+                xPDOTransport::UPDATE_OBJECT => true,
+                xPDOTransport::UNIQUE_KEY => array ('namespace','controller'),
+            ),
+        ),
+    ));
+    //$modx->log(modX::LOG_LEVEL_INFO,'Adding in PHP resolvers...');
+    //$vehicle->resolve('php',array(
+    //    'source' => $sources['resolvers'] . 'resolve.paths.php',
+    //));
+    $builder->putVehicle($vehicle);
+    $modx->log(modX::LOG_LEVEL_INFO,'Packaged in menu.');
+}
+unset($vehicle,$menu);
 
 /* Next-to-last step - pack in the license file, readme.txt, changelog,
  * and setup options 
