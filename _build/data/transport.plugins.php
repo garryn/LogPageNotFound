@@ -47,6 +47,15 @@ $plugins[1]->fromArray(array(
 $properties = include $sources['data'].'properties/properties.logpagenotfound.plugin.php';
 $plugins[1]->setProperties($properties);
 
-unset($properties);
+$events = array();
+$events['OnPageNotFound']= $modx->newObject('modPluginEvent');
+$events['OnPageNotFound']->fromArray(array(
+    'event' => 'OnPageNotFound',
+    'priority' => 99,
+    'propertyset' => 0,
+),'',true,true);
+
+$plugins[1]->addMany($events);
+unset($events, $properties);
 
 return $plugins;

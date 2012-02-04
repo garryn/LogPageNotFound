@@ -44,6 +44,7 @@ class LogPageNotFound {
                     return 'Could not load controller request handler.';
                 }
                 $this->request = new logpagenotfoundControllerRequest($this);
+                $this->modx->invokeEvent('OnBeforeLogPageNotFoundCMPHandleRequest');
                 return $this->request->handleRequest();
             break;
             case 'connector':

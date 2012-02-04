@@ -37,7 +37,8 @@ $_lang['logpagenotfound.count'] = 'Count';
 $_lang['logpagenotfound.page'] = 'Page';
 
 // PageNotFound Manager Page - row context menu
-$_lang['logpagenotfound.page_resolve'] = 'Log resolution of <em>Not Found</em> status for this page.';
+$_lang['logpagenotfound.page_resolve'] = 'Resolve with optional note';
 
-// PageNotFound Manager Page - field names
-$_lang['logpagenotfound.fieldname.notes'] = 'Notes:';
+// PageNotFound Manager Page - default resolve window
+$_lang['logpagenotfound.resolvewindow.intro'] = '<p>Resolve [[+page]] by pressing Save below. Adding a note is optional.</p>';
+$_lang['logpagenotfound.resolvewindow.note'] = 'Note:';

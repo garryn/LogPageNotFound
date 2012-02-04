@@ -57,8 +57,11 @@ logPageNotFound.window.ResolvePage = function(config) {
             xtype: 'hidden'
             ,name: 'page'
         },{
+            xtype: 'displayfield'
+            ,html: _('logpagenotfound.resolvewindow.intro').replace(/\[\[\+page\]\]/, config.record.page)
+        },{
             xtype: 'textarea'
-            ,fieldLabel: _('logpagenotfound.fieldname.notes')
+            ,fieldLabel: _('logpagenotfound.resolvewindow.note')
             ,name: 'resolution'
             ,width: 360
         }]

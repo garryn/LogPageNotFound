@@ -32,13 +32,13 @@
 define('PKG_NAME','LogPageNotFound');
 define('PKG_NAME_LOWER','logpagenotfound');
 define('PKG_VERSION','1.0.4');
-define('PKG_RELEASE','dev5');
+define('PKG_RELEASE','dev10');
 define('PKG_CATEGORY','LogPageNotFound');
 
 /* Set package options - you can turn these on one-by-one
  * as you create the transport package
  * */
-$hasAssets = false; /* Transfer the files in the assets dir. */
+$hasAssets = true; /* Transfer the files in the assets dir. */
 $hasCore = true;   /* Transfer the files in the core dir. */
 $hasSnippets = true;
 $hasResources = true;
@@ -119,14 +119,6 @@ if ($hasSnippets) {
     } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding snippets failed.'); }
 }
 
-if ($hasPlugins) {
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in Plugins.');
-    $plugins = include $sources['data'] . 'transport.plugins.php';
-     if (is_array($plugins)) {
-        $category->addMany($plugins);
-     }
-}
-
 /* Create Category attributes array dynamically
  * based on which elements are present
  */
@@ -149,13 +141,6 @@ if ($hasSnippets) {
         );
 }
 
-if ($hasPlugins) {
-    $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['Plugins'] = array(
-        xPDOTransport::PRESERVE_KEYS => false,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::UNIQUE_KEY => 'name',
-    );
-}
 
 
 /* create a vehicle for the category and all the things
@@ -203,7 +188,32 @@ $vehicle->resolve('php',array(
  */
 $builder->putVehicle($vehicle);
 
-
+/* Plugins */
+if ($hasPlugins) {
+    $modx->log(modX::LOG_LEVEL_INFO,'Adding in Plugins.');
+    $plugins = include $sources['data'] . 'transport.plugins.php';
+    try {
+        $attributes= array(
+            xPDOTransport::UNIQUE_KEY => 'name',
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::RELATED_OBJECTS => true,
+            xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+                'PluginEvents' => array(
+                    xPDOTransport::PRESERVE_KEYS => true,
+                    xPDOTransport::UPDATE_OBJECT => false,
+                    xPDOTransport::UNIQUE_KEY => array('pluginid','event'),
+                ),
+            ),
+        );
+        foreach($plugins as $plugin) {
+            $vehicle = $builder->createVehicle($plugin,$attributes);
+            $builder->putVehicle($vehicle);
+        }
+    } catch (Exception $ex) {
+        $modx->log(modX::LOG_LEVEL_FATAL,'Adding plugins failed.');
+    }
+}
 
 /* Transport Resources */
 
@@ -233,6 +243,21 @@ foreach ($resources as $resource) {
     }
     unset($resources,$resource,$attributes);
 }
+
+/* load events */
+$events = include $sources['data'].'transport.events.php';
+if (empty($events)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in events.');
+$attributes = array (
+    xPDOTransport::PRESERVE_KEYS => true,
+    xPDOTransport::UPDATE_OBJECT => true,
+    xPDOTransport::UNIQUE_KEY => array ('name'),
+);
+foreach ($events as $event) {
+    $vehicle = $builder->createVehicle($event,$attributes);
+    $builder->putVehicle($vehicle);
+}
+$modx->log(xPDO::LOG_LEVEL_INFO,'Packaged in '.count($events).' default events.'); flush();
+unset ($events,$event,$attributes);
 
 /* load menu */
 $menu = include $sources['data'].'transport.menu.php';

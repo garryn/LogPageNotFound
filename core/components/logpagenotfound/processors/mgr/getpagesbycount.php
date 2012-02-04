@@ -68,16 +68,26 @@ $sql = <<<REQUESTQUERY
 
 REQUESTQUERY;
 
-$stmt = $modx->query($sql);
-if ($stmt) {
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $row['menu'] = array();
-        $row['menu'][] = array(
-            'text' => $modx->lexicon('logpagenotfound.page_resolve'),
-            'handler' => 'this.resolvePage',
-        );
+if(intval($count) > 0) {
+    $handlers = array();
+    $handlers[0] = array(
+        'text' => $modx->lexicon('logpagenotfound.page_resolve'),
+        'handler' => 'this.resolvePage',
+    );
+    $pluggedHandlers = $modx->invokeEvent('OnLogPageNotFoundRegisterHandler');
+    foreach($pluggedHandlers as $handler) {
+       $handlers[] = $modx->fromJSON($handler);
+    }
 
-        $list[]= $row;
+    $stmt = $modx->query($sql);
+    if ($stmt) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $row['menu'] = array();
+            $row['menu'] = $handlers;
+
+            $list[]= $row;
+        }
     }
 }
+
 return $this->outputArray($list,$count);

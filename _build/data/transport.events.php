@@ -1,7 +1,7 @@
 <?php
 /**
- * LogPageNotFound Controller
-git s *
+ * LogPageNotFound
+ *
  * Copyright 2011 Bob Ray <http://bobsguides.com>
  *
  * LogPageNotFound is free software; you can redistribute it and/or modify it
@@ -18,12 +18,29 @@ git s *
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package logpagenotfound
- * @subpackage controllers
  */
 /**
+ * Adds custom system events
+ *
  * @package logpagenotfound
- * @subpackage controllers
+ * @subpackage build
  */
-$classDir = $modx->getOption('logpagenotfound.core_path',null,$modx->getOption('core_path').'components/logpagenotfound/') . 'model/logpagenotfound/';
-$logPageNotFound = $modx->getService('logpagenotfound', 'LogPageNotFound', $classDir);
-return $logPageNotFound->initialize('mgr');
+$events = array();
+
+/* Register Handlers for Pages in the main CMP grid */
+$events['OnLog404RegisterHandler']= $modx->newObject('modEvent');
+$events['OnLog404RegisterHandler']->fromArray(array (
+  'name' => 'OnLog404RegisterHandler',
+  'service' => 1,
+  'groupname' => 'LogPageNotFound',
+), '', true, true);
+
+/* Register Handlers for Pages in the main CMP grid */
+$events['OnBeforeLog404CMPHandleRequest']= $modx->newObject('modEvent');
+$events['OnBeforeLog404CMPHandleRequest']->fromArray(array (
+  'name' => 'OnBeforeLog404CMPHandleRequest',
+  'service' => 1,
+  'groupname' => 'LogPageNotFound',
+), '', true, true);
+
+return $events;

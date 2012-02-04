@@ -29,11 +29,15 @@
  * @subpackage processors
  */
 
+$handler = !empty($this->properties['handler']) ? $this->properties['handler'] : 'default';
+
 $R = $modx->newObject('pageNotFoundResolved', array(
-    'page'=> $this->properties['page'],
-    'resolution_handler'=> 'default',
-    'resolution_msg'=> $this->properties['resolution']
+    'resolution_handler'=> $handler,
+    'resolution_msg'=> $this->properties['resolution'],
+    'time'=> time(),
+    'user'=> $modx->user->get('id')
 ));
+$R->set('page', $this->properties['page']);
 $R->save();
 
 return $modx->error->success('',$R);
