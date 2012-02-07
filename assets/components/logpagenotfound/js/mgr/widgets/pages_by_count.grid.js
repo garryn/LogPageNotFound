@@ -6,7 +6,7 @@ logPageNotFound.grid.Items = function(config) {
         ,baseParams: {
             action: 'mgr/getpagesbycount'
         }
-        ,fields: ['count','page','menu']
+        ,fields: ['count','page','menu','lasthit']
         ,autoHeight: true
         ,paging: true
         ,remoteSort: true
@@ -20,6 +20,29 @@ logPageNotFound.grid.Items = function(config) {
             ,dataIndex: 'count'
             ,width: 20
             ,sortable: true
+        },{
+            header: _('logpagenotfound.lasthit')
+            ,dataIndex: 'lasthit'
+            ,width: 20
+            ,sortable: true
+        }]
+        ,tbar: [{
+            xtype: 'textfield'
+            ,id: 'logpagenotfound-search-filter'
+            ,emptyText: _('logpagenotfound.search...')
+            ,listeners: {
+                'change': {fn:this.search,scope:this}
+                ,'render': {fn: function(cmp) {
+                    new Ext.KeyMap(cmp.getEl(), {
+                        key: Ext.EventObject.ENTER
+                        ,fn: function() {
+                            this.fireEvent('change',this.getValue());
+                            this.blur();
+                            return true; }
+                        ,scope: cmp
+                    });
+                },scope:this}
+            }
         }]
     });
     logPageNotFound.grid.Items.superclass.constructor.call(this,config);
@@ -27,7 +50,13 @@ logPageNotFound.grid.Items = function(config) {
 Ext.extend(logPageNotFound.grid.Items,MODx.grid.Grid,{
     windows: {},
 
-    resolvePage: function(btn,e) {
+    search: function(tf,nv,ov) {
+        var s = this.getStore();
+        s.baseParams.query = nv//tf.getValue();
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
+    }
+    ,resolvePage: function(btn,e) {
         if (!this.resolvePageWindow) {
             this.resolvePageWindow = MODx.load({
                 xtype: 'logpagenotfound-window-page-resolve'

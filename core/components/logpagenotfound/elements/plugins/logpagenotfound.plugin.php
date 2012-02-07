@@ -23,9 +23,9 @@
 
 $basePath = $modx->getOption('logpagenotfound.core_path', null, $modx->getOption('core_path').'components/logpagenotfound/');
 
-// default to site_root relative
+// default to base_url relative
 // @todo allow other options e.g. document_root
-$pageRelativeTo = $modx->getOption('logpagenotfound.relative_to', null, 'site_root');
+$pageRelativeTo = $modx->getOption('logpagenotfound.relative_to', null, 'base_url');
 
 $modx->addPackage('logpagenotfound',$basePath . 'model/');
 
@@ -84,8 +84,11 @@ $data['host'] = get_host($data['ip']);
 $data['referer'] = empty($_SERVER['HTTP_REFERER']) ? '(empty)' : $_SERVER['HTTP_REFERER'];
 $msg = implode('`', $data);
 
-if($pageRelativeTo == 'site_root') {
-    $site_root = $modx->config;
+if($pageRelativeTo == 'base_url') {
+    $site_root = $modx->config['base_url'];
+    if(strpos($data['page'], $site_root) === 0) {
+        $data['page'] = substr($data['page'], strlen($site_root));
+    }
 }
 
 /* file logging

@@ -3,6 +3,7 @@ Changelog for LogPageNotFound
 LogPageNotFound 1.0.4
 ---------------------
 Add ability to log to database table
+CMP for reviewing and resolving 404s
 
 LogPageNotFound 1.0.1
 ---------------------

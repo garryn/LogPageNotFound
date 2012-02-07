@@ -33,21 +33,42 @@ $start = $modx->getOption('start',$_REQUEST,0);
 $limit = $modx->getOption('limit',$_REQUEST,20);
 $sort = $modx->getOption('sort',$_REQUEST,'count');
 $dir = $modx->getOption('dir',$_REQUEST,'DESC');
+$query = $modx->getOption('query',$_REQUEST,'');
+$notQuery = false;
+preg_match("/^NOT\s?(.*)$/", $query, $queryMatches);
+if(is_array($queryMatches) && count($queryMatches) == 2) {
+    $notQuery = true;
+    $query = $queryMatches[1];
+}
+$isQueryRegex = (!empty($query) && substr($query, 0, 1) == '/');
 
 $list = array();
 
 $colCount = $modx->escape('count');
 $colPage = $modx->escape('page');
 $colId = $modx->escape('id');
+$colTime = $modx->escape('time');
 $lpnfTableName = $modx->getTableName('pageNotFound');
 $resolvedTableName = $modx->getTableName('pageNotFoundResolved');
 
+if(!empty($query)) {
+    if(!$isQueryRegex) {
+        $searchFunction = $notQuery ? 'NOT LIKE' : 'LIKE';
+        $query = "%{$query}%";
+    } else {
+        $searchFunction = $notQuery ? 'NOT REGEXP' : 'REGEXP';
+        $query = preg_replace("/^\/(.*)\//", '$1', $query);
+    }
+    $whereSearch = " AND i.{$colPage} {$searchFunction} '{$query}'\n";
+}
+
 $subquery = <<<SUBQUERY
-    SELECT COUNT(i.{$colId}) as $colCount, i.{$colPage}
+    SELECT COUNT(i.{$colId}) as $colCount, i.{$colPage}, MAX(i.{$colTime}) AS `lasthit`
         FROM $lpnfTableName AS i
         LEFT JOIN $resolvedTableName AS r
-            ON i.page = r.page
-        WHERE ISNULL(r.page)
+            ON i.{$colPage} = r.{$colPage}
+        WHERE ISNULL(r.{$colPage})
+{$whereSearch}
         GROUP BY i.{$colPage}
 
 SUBQUERY;
@@ -61,7 +82,7 @@ $stmt = $modx->query($countQuery);
 $count = $stmt->fetchColumn();
 
 $sql = <<<REQUESTQUERY
-    SELECT sq.{$colCount}, sq.{$colPage}
+    SELECT sq.{$colCount}, sq.{$colPage}, sq.`lasthit`
         FROM ($subquery) as sq
         ORDER BY $sort $dir
         LIMIT $limit OFFSET $start
@@ -74,7 +95,7 @@ if(intval($count) > 0) {
         'text' => $modx->lexicon('logpagenotfound.page_resolve'),
         'handler' => 'this.resolvePage',
     );
-    $pluggedHandlers = $modx->invokeEvent('OnLogPageNotFoundRegisterHandler');
+    $pluggedHandlers = $modx->invokeEvent('OnLog404RegisterHandler');
     foreach($pluggedHandlers as $handler) {
        $handlers[] = $modx->fromJSON($handler);
     }

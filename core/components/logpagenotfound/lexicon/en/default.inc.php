@@ -29,12 +29,20 @@ $_lang['logpagenotfound'] = 'LogPageNotFound';
 $_lang['logpagenotfound.menu_desc'] = 'LogPageNotFound is a plugin for MODX Revolution that logs page-not-found requests';
 
 // PageNotFound Manager Page - tabs
-$_lang['logpagenotfound.items_by_count'] = 'Pages by Count';
-$_lang['logpagenotfound.items_by_count_desc'] = 'A list of Pages Not Found which have not been logged as resolved. They are listed along with the running count of Not Found requests to the page.';
+$_lang['logpagenotfound.items_by_count'] = 'Unresolved Pages by Count';
+$_lang['logpagenotfound.items_by_count_desc'] = <<<DESCRIPTION
+<p>A list of Pages Not Found which have not been logged as resolved. They are listed along with the running count of Not Found requests to the page.</p>
+<p>Example search queries: <u>container1/</u> &nbsp;&nbsp;<u>NOT pagename</u> &nbsp;&nbsp;<u>/^regexp?/</u> &nbsp;&nbsp;<u>NOT /\.(gif|jpg|png)$/</u></p>
+
+DESCRIPTION;
+
+// PageNotFound Manager Page - column headers
+$_lang['logpagenotfound.search...'] = 'Search...';
 
 // PageNotFound Manager Page - column headers
 $_lang['logpagenotfound.count'] = 'Count';
 $_lang['logpagenotfound.page'] = 'Page';
+$_lang['logpagenotfound.lasthit'] = 'Last hit';
 
 // PageNotFound Manager Page - row context menu
 $_lang['logpagenotfound.page_resolve'] = 'Resolve with optional note';

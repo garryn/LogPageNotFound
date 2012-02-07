@@ -32,7 +32,7 @@
 define('PKG_NAME','LogPageNotFound');
 define('PKG_NAME_LOWER','logpagenotfound');
 define('PKG_VERSION','1.0.4');
-define('PKG_RELEASE','dev10');
+define('PKG_RELEASE','dev13');
 define('PKG_CATEGORY','LogPageNotFound');
 
 /* Set package options - you can turn these on one-by-one
