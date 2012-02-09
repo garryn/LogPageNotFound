@@ -2,6 +2,7 @@ Changelog for LogPageNotFound
 
 LogPageNotFound 1.0.4
 ---------------------
+Fix issue with multiple grid store loading when searching
 Add ability to log to database table
 CMP for reviewing and resolving 404s
 

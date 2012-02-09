@@ -35,10 +35,7 @@ logPageNotFound.grid.Items = function(config) {
                 ,'render': {fn: function(cmp) {
                     new Ext.KeyMap(cmp.getEl(), {
                         key: Ext.EventObject.ENTER
-                        ,fn: function() {
-                            this.fireEvent('change',this.getValue());
-                            this.blur();
-                            return true; }
+                        ,fn: this.blur
                         ,scope: cmp
                     });
                 },scope:this}
@@ -54,7 +51,6 @@ Ext.extend(logPageNotFound.grid.Items,MODx.grid.Grid,{
         var s = this.getStore();
         s.baseParams.query = nv//tf.getValue();
         this.getBottomToolbar().changePage(1);
-        this.refresh();
     }
     ,resolvePage: function(btn,e) {
         if (!this.resolvePageWindow) {
